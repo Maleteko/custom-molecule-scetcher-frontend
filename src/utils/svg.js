@@ -28,13 +28,13 @@ const getRotationAndTranslation = (line) => {
 
   let scale = '';
   const length = Math.sqrt(dx * dx + dy * dy);
-  const deviation = 0.1;
-  if (length < 1 - deviation || length > 1 + deviation) {
-    console.warn(`Length of bond is ${length} which is not 1. The bond template will be scaled to ${length}.`);
-    scale = `scale(${length})`;
+  const deviation = 10;
+  if (length < 150 - deviation || length > 150 + deviation) {
+    console.warn(`Length of bond is ${length} which is not 150. The bond template is scaled to ${length}.`);
+    scale = `scale(${length/150})`;
   }
 
-  return { translation, rotation, scale };
+  return translation+scale+rotation;
 };
 
 const calculateOrthogonalTransformation = (line, value) => {
