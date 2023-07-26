@@ -101,6 +101,7 @@ export default {
       } catch (error) {
         // Handle any errors
         console.error(error);
+        showError(error);
       }
       if ("error" in response.data) {
         showError(response.data["error"]);
