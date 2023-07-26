@@ -50,8 +50,6 @@ export default {
     let drawTripleBond = default_drawTripleBond;
     let drawAtom = default_drawAtom;
 
-    smilesString.val   = ref('CCO');
-
     // funtion to show error_banner and error_message when error occurs. The error banner dissapears after 5 secondsy
     const showError = (message) => {
       error_message.value = message;
