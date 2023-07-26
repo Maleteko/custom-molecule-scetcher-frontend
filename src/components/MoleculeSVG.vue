@@ -10,6 +10,9 @@
         <button class="btn btn-outline-secondary" type="button" @click="downloadSVG">Download SVG</button>
       </div>
     </div>
+    <div v-if="show_error" class="alert alert-danger" role="alert">
+      {{ error_message }}
+    </div>
     <button type="button" class="btn btn-primary" @click="drawTestMolecule" hidden>Draw test molecule</button>
     <div class="SVGcontainer">
       <svg ref="canvas" :viewBox="viewBox"></svg>
@@ -37,6 +40,8 @@ export default {
     const viewBox = ref('-100 -100 200 200');
     const selectTemplate = ref('default');
     const draw_options = ref([]);
+    const show_error = ref(false);
+    const error_message = ref('');
 
     const apiAddress = import.meta.env.VITE_APP_BACKEND_API;
 
@@ -46,6 +51,16 @@ export default {
     let drawAtom = default_drawAtom;
 
     smilesString.val   = ref('CCO');
+
+    // funtion to show error_banner and error_message when error occurs. The error banner dissapears after 5 secondsy
+    const showError = (message) => {
+      error_message.value = message;
+      show_error.value = true;
+      setTimeout(() => {
+        show_error.value = false;
+        error_message.value = '';
+      }, 5000);
+    };
 
     const load_template = () => {
       if (selectTemplate.value === 'default') {
@@ -86,6 +101,9 @@ export default {
       } catch (error) {
         // Handle any errors
         console.error(error);
+      }
+      if ("error" in response.data) {
+        showError(response.data["error"]);
       }
       return response;
     };
@@ -173,7 +191,9 @@ export default {
       selectTemplate,
       load_template,
       draw_options,
-      downloadSVG
+      downloadSVG,
+      show_error,
+      error_message
     };
   }
 }
