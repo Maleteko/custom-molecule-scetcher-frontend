@@ -3,6 +3,11 @@
     {
         "atoms" : "default/atoms.js",
         "bonds": "default/bonds.js"
+    },
+"drawio": 
+    {
+        "atoms" : "drawio/atoms.js",
+        "bonds": "drawio/bonds.js"
     }
 }
   

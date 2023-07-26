@@ -1,6 +1,6 @@
 import { calculateOrthogonalTransformation } from "../../../utils/svg"
 
-const drawSingleBond = (line, index) => {
+const default_drawSingleBond = (line, index) => {
     const svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     svgLine.setAttribute('x1', line.startPoint.x);
     svgLine.setAttribute('y1', line.startPoint.y);
@@ -13,21 +13,21 @@ const drawSingleBond = (line, index) => {
     return [ svgLine ];
 };
 
-const drawDoubleBond = (line, index) => {
-    const svgLine1 = drawSingleBond(line, index+"_0")[0];
+const default_drawDoubleBond = (line, index) => {
+    const svgLine1 = default_drawSingleBond(line, index+"_0")[0];
     svgLine1.setAttribute('transform', calculateOrthogonalTransformation(line, 10));
-    const svgLine2 = drawSingleBond(line, index+"_1")[0];
+    const svgLine2 = default_drawSingleBond(line, index+"_1")[0];
     svgLine2.setAttribute('transform', calculateOrthogonalTransformation(line, -10));
     return [ svgLine1, svgLine2 ];
 };
 
-const drawTripleBond = (line, index) => {
-    const svgLine1 = drawSingleBond(line, index+"_0")[0];
+const default_drawTripleBond = (line, index) => {
+    const svgLine1 = default_drawSingleBond(line, index+"_0")[0];
     svgLine1.setAttribute('transform', calculateOrthogonalTransformation(line, 20));
-    const svgLine2 = drawSingleBond(line, index+"_1")[0];
-    const svgLine3 = drawSingleBond(line, index+"_2")[0];
+    const svgLine2 = default_drawSingleBond(line, index+"_1")[0];
+    const svgLine3 = default_drawSingleBond(line, index+"_2")[0];
     svgLine3.setAttribute('transform', calculateOrthogonalTransformation(line, -20));
     return [ svgLine1, svgLine2, svgLine3 ];
 };
 
-export { drawSingleBond, drawDoubleBond, drawTripleBond}
+export { default_drawSingleBond, default_drawDoubleBond, default_drawTripleBond}

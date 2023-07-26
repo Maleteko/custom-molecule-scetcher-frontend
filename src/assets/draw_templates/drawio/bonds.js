@@ -28,14 +28,14 @@ const drawPath = (line, index) => {
 };
 
 
-const drawSingleBond = (line, index) => {
+const drawio_drawSingleBond = (line, index) => {
     const svgLine = drawPath(line, index)[0];
     svgLine.setAttribute('transform', getRotationAndTranslation(line));
     return [ svgLine ];
     };
 
 
-const drawDoubleBond = (line, index) => {
+const drawio_drawDoubleBond = (line, index) => {
     const svgLine1 = drawPath(line, index+"_0")[0];
     svgLine1.setAttribute('transform', calculateOrthogonalTransformation(line, 10)+getRotationAndTranslation(line));
     const svgLine2 = drawPath(line, index+"_1")[0];
@@ -43,7 +43,7 @@ const drawDoubleBond = (line, index) => {
     return [ svgLine1, svgLine2 ];
 };
 
-const drawTripleBond = (line, index) => {
+const drawio_drawTripleBond = (line, index) => {
     const svgLine1 = drawPath(line, index+"_0")[0];
     svgLine1.setAttribute('transform', calculateOrthogonalTransformation(line, 20)+getRotationAndTranslation(line));
     const svgLine2 = drawPath(line, index+"_1")[0];
@@ -53,4 +53,4 @@ const drawTripleBond = (line, index) => {
     return [ svgLine1, svgLine2, svgLine3 ];
 };
 
-export { drawSingleBond, drawDoubleBond, drawTripleBond }
+export { drawio_drawSingleBond, drawio_drawDoubleBond, drawio_drawTripleBond }

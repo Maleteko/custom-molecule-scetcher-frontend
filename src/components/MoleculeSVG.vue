@@ -1,10 +1,9 @@
-
 <template>
   <div class="center">
-    <select class="form-select" aria-label="Default select example" v-model="selectTemplate">
-      <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>
+    <select class="form-select" aria-label="Default select example" v-model="selectTemplate" @change="load_template">
+      <option v-for="option in draw_options" :key="option.value" :value="option.value">{{ option.label }}</option>
     </select>
-    <div class="input-group">
+    <div class="input-group pad">
       <input type="text" @keyup.enter="drawMolecules" class="form-control" laceholder="Insert SMILES string" aria-label="SMILES string" aria-describedby="basic-addon2" v-model="smilesString">
       <div class="input-group-append">
         <button class="btn btn-outline-secondary" type="button" @click="drawMolecules">Draw</button>
@@ -12,7 +11,7 @@
       </div>
     </div>
     <button type="button" class="btn btn-primary" @click="drawTestMolecule" hidden>Draw test molecule</button>
-    <div class="SVGcontainer" ref="SVGcontainerRef">
+    <div class="SVGcontainer">
       <svg ref="canvas" :viewBox="viewBox"></svg>
     </div>
   </div>
@@ -20,32 +19,51 @@
 
 <script>
 import axios from 'axios';
-import { ref, watchEffect, nextTick } from 'vue';
-import colors from '../assets/draw_templates/default/colors.json';
+import { ref } from 'vue';
 import draw_templates from '../assets/draw_templates/config.json';
 import { Line } from "../utils/svg";
-import { drawSingleBond, drawDoubleBond, drawTripleBond } from "../assets/draw_templates/custom/bonds";
-import { drawAtom } from "../assets/draw_templates/custom/atoms";
+
+import { drawio_drawSingleBond, drawio_drawDoubleBond, drawio_drawTripleBond } from "../assets/draw_templates/drawio/bonds";
+import { drawio_drawAtom } from "../assets/draw_templates/drawio/atoms";
+
+import { default_drawSingleBond, default_drawDoubleBond, default_drawTripleBond } from "../assets/draw_templates/default/bonds";
+import { default_drawAtom } from "../assets/draw_templates/default/atoms";
+import smiles_examples from "../assets/example_smiles.json";
 
 export default {
   setup() {
-    const smilesString = ref('COC1=CC(=C(C=C1CCN)OC)Br');
+    const smilesString = ref('');
     const canvas = ref(null);
-    const viewBox = ref('');
-    const selectTemplate = ref('');
-    const options = ref([]);
-    const SVGcontainerRef = ref(null);
+    const viewBox = ref('-100 -100 200 200');
+    const selectTemplate = ref('default');
+    const draw_options = ref([]);
 
-    const smiles_examples = [
-      "CC(=O)OC1=CC=CC=C1C(=O)O",
-      "CC1=C(C2=CC3=NC(=CC4=C(C(=C([N-]4)C=C5C(=C(C(=N5)C=C1[N-]2)C=C)C)C=C)C)C(=C3CCC(=O)[O-])C)CCC(=O)[O-]",
-      "CCCCCC1=CC(=C2C3C=C(CCC3C(OC2=C1)(C)C)C)O",
-      "CCN(CC)C(=O)C1CN(C2CC3=CC4=C(C2=C1)C=CC=C4N3)C",
-      "CCN[C@H](C)CC1=CC2=C(C=C1)OCO2"
-    ]
+    const apiAddress = import.meta.env.VITE_APP_BACKEND_API;
+
+    let drawSingleBond = default_drawSingleBond;
+    let drawDoubleBond = default_drawDoubleBond;
+    let drawTripleBond = default_drawTripleBond;
+    let drawAtom = default_drawAtom;
+
+    smilesString.val   = ref('CCO');
+
+    const load_template = () => {
+      if (selectTemplate.value === 'default') {
+        drawSingleBond = default_drawSingleBond;
+        drawDoubleBond = default_drawDoubleBond;
+        drawTripleBond = default_drawTripleBond;
+        drawAtom = default_drawAtom;
+      } else if (selectTemplate.value === 'drawio') {
+        drawSingleBond = drawio_drawSingleBond;
+        drawDoubleBond = drawio_drawDoubleBond;
+        drawTripleBond = drawio_drawTripleBond;
+        drawAtom = drawio_drawAtom;
+      }
+      drawMolecules();
+    };
 
     const fillSelectBox = () => {
-      options.value = Object.keys(draw_templates).map((template) => {
+      draw_options.value = Object.keys(draw_templates).map((template) => {
         return {
           label: template,
           value: template
@@ -56,7 +74,7 @@ export default {
     const getCoordinates = async () => {
       let response;
       try {
-        response = await axios.post('http://localhost:8000/coordinates/',
+        response = await axios.post(apiAddress + '/coordinates/',
           { smiles: smilesString.value },
           {
             headers: {
@@ -73,7 +91,6 @@ export default {
     };
 
     const generateSVG = (coordinates) => {
-      console.log(coordinates);
       // Clear the SVG
       while (canvas.value.firstChild) {
         canvas.value.firstChild.remove();
@@ -144,7 +161,7 @@ export default {
       document.body.removeChild(downloadLink);
     };
 
-    drawMolecules();
+    drawTestMolecule();
     fillSelectBox();
 
     return {
@@ -154,8 +171,8 @@ export default {
       canvas,
       viewBox,
       selectTemplate,
-      options,
-      SVGcontainerRef,
+      load_template,
+      draw_options,
       downloadSVG
     };
   }
@@ -163,4 +180,9 @@ export default {
 </script>
 
 <style scoped>
+
+.pad {
+  padding: 5px;
+}
+
 </style>
