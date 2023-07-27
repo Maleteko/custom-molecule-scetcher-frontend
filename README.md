@@ -2,6 +2,8 @@
 
 This Vue.js frontend is part of a project that provides a web-based tool for visualizing the 2D structure of molecules based on SMILES strings. Users can enter a SMILES string, and the frontend sends an API POST request to the Django backend to calculate the 2D coordinates of the molecule using RDKit. The frontend then renders the molecular structure using various templates.
 
+<img src="https://raw.githubusercontent.com/Maleteko/custom-molecule-scetcher-frontend/f3c895c3a50723e6895c45a75c63f20b2009226c/docs/images/molecule.svg">
+
 ## Prerequisites
 
 Before running the frontend, make sure you have the following installed:
