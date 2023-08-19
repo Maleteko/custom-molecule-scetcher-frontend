@@ -69,4 +69,28 @@ const calculateOrthogonalTransformation = (line, value) => {
   return transformation;
 }
 
-export { Line, getRotationAndTranslation, calculateOrthogonalTransformation };
+const scaleSvgPath = (path, minValue, maxValue) => {
+  // Parse the path data into individual commands
+  const commands = path.match(/[MmLlHhVvCcSsQqTtAaZz][^MmLlHhVvCcSsQqTtAaZz]*/g);
+
+  // Loop through the commands and scale the coordinates
+  const scaledCommands = commands.map(command => {
+    const cmd = command[0];
+    const args = command.substring(1).trim().split(/\s*,\s*|\s+/);
+
+    const scaledArgs = args.map(arg => {
+      const val = parseFloat(arg);
+      if (!isNaN(val)) {
+        return ((val - minValue) / (maxValue - minValue)) * 100;
+      }
+      return arg;
+    });
+
+    return cmd + " " + scaledArgs.join(" ");
+  });
+
+  // Join the scaled commands back into path data
+  return scaledCommands.join(" ");
+};
+
+export { Line, getRotationAndTranslation, calculateOrthogonalTransformation, scaleSvgPath };
