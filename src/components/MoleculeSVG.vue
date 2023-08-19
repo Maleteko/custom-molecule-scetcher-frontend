@@ -31,6 +31,10 @@ import { drawio_drawAtom } from "../assets/draw_templates/drawio/atoms";
 
 import { default_drawSingleBond, default_drawDoubleBond, default_drawTripleBond } from "../assets/draw_templates/default/bonds";
 import { default_drawAtom } from "../assets/draw_templates/default/atoms";
+
+import { custom_drawSingleBond, custom_drawDoubleBond, custom_drawTripleBond } from "../assets/draw_templates/custom/bonds";
+import { custom_drawAtom } from "../assets/draw_templates/custom/atoms";
+
 import smiles_examples from "../assets/example_smiles.json";
 
 export default {
@@ -71,6 +75,11 @@ export default {
         drawDoubleBond = drawio_drawDoubleBond;
         drawTripleBond = drawio_drawTripleBond;
         drawAtom = drawio_drawAtom;
+      } else if (selectTemplate.value === 'custom') {
+        drawSingleBond = custom_drawSingleBond;
+        drawDoubleBond = custom_drawDoubleBond;
+        drawTripleBond = custom_drawTripleBond;
+        drawAtom = custom_drawAtom;
       }
       drawMolecules();
     };

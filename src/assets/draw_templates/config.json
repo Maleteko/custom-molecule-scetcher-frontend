@@ -8,6 +8,11 @@
     {
         "atoms" : "drawio/atoms.js",
         "bonds": "drawio/bonds.js"
+    },
+"custom": 
+    {
+        "atoms" : "custom/atoms.js",
+        "bonds": "custom/bonds.js"
     }
 }
   
